@@ -1,0 +1,26 @@
+{% extends "citas/base.html" %}
+{% block title %}Cuenta · pinkynails.ym{% endblock %}
+{% block body %}
+<div class="top"><a href="{% url 'citas:index' %}">pinkynails.ym</a>
+  <div class="nav"><a href="{% url 'citas:panel' %}">← Volver al panel</a></div>
+</div>
+<main style="max-width:520px">
+  <h2>Cambiar usuario o contraseña</h2>
+  <div class="card neon">
+    {% for m in messages %}<div class="msg{% if m.tags == 'error' %} err{% endif %} show">{{ m }}</div>{% endfor %}
+    {% if pendiente %}
+    <form method="post">{% csrf_token %}<input type="hidden" name="accion" value="confirmar">
+      <label for="c">Código de verificación (llegó a tu celular)</label>
+      <input id="c" name="codigo" inputmode="numeric" maxlength="6" autocomplete="one-time-code" required>
+      <p><button class="cta" type="submit">Guardar cambios</button></p>
+    </form>
+    {% else %}
+    <form method="post">{% csrf_token %}<input type="hidden" name="accion" value="pedir">
+      <label for="nu">Nuevo usuario</label><input id="nu" name="usuario" autocomplete="off" required>
+      <label for="np">Nueva contraseña</label><input id="np" name="password" type="password" autocomplete="new-password" required>
+      <p><button class="cta" type="submit">Enviar código al celular</button></p>
+    </form>
+    {% endif %}
+  </div>
+</main>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "citas/base.html" %}
+{% block title %}Acceso · pinkynails.ym{% endblock %}
+{% block body %}
+<div class="top"><a href="{% url 'citas:index' %}">pinkynails.ym</a></div>
+<main style="max-width:440px">
+  <h2>Acceso administradora</h2>
+  <div class="card neon">
+    {% for m in messages %}<div class="msg err show">{{ m }}</div>{% endfor %}
+    <form method="post">{% csrf_token %}
+      <label for="u">Usuario</label><input id="u" name="usuario" autocomplete="username" required>
+      <label for="p">Contraseña</label><input id="p" name="password" type="password" autocomplete="current-password" required>
+      <p><button class="cta" type="submit">Entrar</button></p>
+    </form>
+  </div>
+</main>
+{% endblock %}

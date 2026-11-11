@@ -1,0 +1,41 @@
+{% extends "citas/base.html" %}
+{% load static %}
+{% block body %}
+<header class="hero">
+  <h1><span>Pinky</span><span>Nails</span></h1>
+  <div class="dom">pinkynails.ym</div>
+  {% if evento %}<div id="ev">{{ evento }}</div>{% endif %}
+  <p id="tag">{{ tag }}</p>
+  <a class="cta" href="#agenda" style="display:inline-block;text-decoration:none">Agendar cita</a>
+</header>
+<main>
+  <h2>Mi trabajo</h2>
+  <div class="gallery">
+    {% for f in galeria %}<div class="ph" style="padding:0;overflow:hidden"><img src="{{ f.url }}" alt="{{ f.alt }}" loading="lazy"></div>{% endfor %}
+  </div>
+
+  <h2 id="agenda">Agenda tu cita</h2>
+  <div class="card neon">
+    {% csrf_token %}
+    <label for="svc">Servicio</label>
+    <select id="svc">{% for s in servicios %}<option>{{ s }}</option>{% endfor %}</select>
+    <label>Días disponibles</label>
+    <div class="slots" id="days"></div>
+    <label>Hora</label>
+    <div class="slots" id="slots"></div>
+    <label for="nm">Tu nombre</label>
+    <input id="nm" autocomplete="name" maxlength="60">
+    <label for="tel">WhatsApp</label>
+    <input id="tel" type="tel" autocomplete="tel" inputmode="tel">
+    <p><button class="cta" id="book" type="button">Agendar cita</button></p>
+    <div class="msg" id="msg" role="status"></div>
+  </div>
+</main>
+<footer style="text-align:center;padding:0 0 40px;position:relative;z-index:1">
+  <a href="{% url 'citas:login' %}" style="color:var(--hl);opacity:.7;font-size:14px">Acceso administradora</a>
+</footer>
+{{ slots|json_script:"slots-data" }}
+{{ dias|json_script:"dias-data" }}
+{{ fx|json_script:"fx-data" }}
+{% endblock %}
+{% block scripts %}<script src="{% static 'citas/site.js' %}"></script>{% endblock %}

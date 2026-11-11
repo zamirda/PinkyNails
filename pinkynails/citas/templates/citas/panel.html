@@ -1,0 +1,28 @@
+{% extends "citas/base.html" %}
+{% block title %}Panel · pinkynails.ym{% endblock %}
+{% block body %}
+<div class="top"><a href="{% url 'citas:index' %}">pinkynails.ym</a>
+  <div class="nav">
+    <a href="{% url 'citas:cuenta' %}">Cambiar usuario o contraseña</a>
+    <a href="{% url 'admin:index' %}">Fotos y bloqueos</a>
+    <form method="post" action="{% url 'citas:logout' %}" class="rowbtn">{% csrf_token %}<button type="submit">Salir</button></form>
+  </div>
+</div>
+<main>
+  <h2>Citas pendientes</h2>
+  <div class="card neon">
+    {% for m in messages %}<div class="msg show">{{ m }}</div>{% endfor %}
+    {% for c in citas %}
+    <div class="row">
+      <div><b>{{ c.nombre }} · {{ c.servicio }}</b><span>{{ c.inicio|date:"D j M" }}, {{ c.hora_texto }} · +{{ c.telefono }}</span></div>
+      <div>
+        <span class="st{% if c.estado == 'confirmada' %} ok{% endif %}">{{ c.get_estado_display }}</span>
+        {% if c.estado == 'pendiente' %}<form method="post" class="rowbtn">{% csrf_token %}<input type="hidden" name="id" value="{{ c.id }}"><input type="hidden" name="accion" value="confirmar"><button class="mini" type="submit">Confirmar</button></form>{% endif %}
+        <a class="mini" style="text-decoration:none;display:inline-block" target="_blank" rel="noopener" href="{{ c.wa_url }}">Avisar por WhatsApp</a>
+        <form method="post" class="rowbtn" onsubmit="return confirm('¿Cancelar esta cita?')">{% csrf_token %}<input type="hidden" name="id" value="{{ c.id }}"><input type="hidden" name="accion" value="cancelar"><button class="mini" type="submit">Cancelar</button></form>
+      </div>
+    </div>
+    {% empty %}<div class="empty">Aún no tienes citas pendientes.</div>{% endfor %}
+  </div>
+</main>
+{% endblock %}
